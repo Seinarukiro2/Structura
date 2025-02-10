@@ -1,24 +1,37 @@
 import asyncio
-import logging
-from aiogram import Bot, Dispatcher
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.utils.executor import start_polling
-from config.settings import BOT_TOKEN
-from handlers.start import register_handlers_start
-from services.ton_monitor import check_transactions
+from telethon import TelegramClient, events, Button
+from config.settings import API_ID, API_HASH, BOT_TOKEN, TON_WALLET_ADDRESS
 
-logging.basicConfig(level=logging.INFO)
+# Создаем клиента Telethon
+bot = TelegramClient('bot_session', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
 
-bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher(bot, storage=MemoryStorage())
+def get_tonconnect_link(user_id, amount):
+    amount_with_zero = amount * 1000000000
+    return f"ton://transfer/{TON_WALLET_ADDRESS}?amount={amount_with_zero}&text={user_id}"
 
-async def main():
-    register_handlers_start(dp)
-    
-    loop = asyncio.get_event_loop()
-    loop.create_task(check_transactions())
+@bot.on(events.NewMessage(pattern='/start'))
+async def start_handler(event):
+    user_id = event.sender_id
+    amount = 40
+    tonconnect_url = get_tonconnect_link(user_id, amount)
 
-    await dp.start_polling()
+    text = (
+        "Добро пожаловать в <b>STRUCTURA</b>, чтобы получить право на пропуск и стать 'sotrudnik, внесите пожалуйста ваши средства.\n\n"
+        "// Мы не обещаем хорошее обращение с 'sotrudnik.\n\n"
+        f"<b>Адрес для оплаты:</b> <code>{TON_WALLET_ADDRESS}</code>\n"
+        f"<b>Мемо:</b> <code>{user_id}</code>\n"
+        f"<b>Сумма TON:</b> <code>...</code>"
+    )
 
-if __name__ == "__main__":
-    asyncio.run(main())
+    buttons = [[Button.url("🔗 Оплатить", tonconnect_url)]]
+
+    await bot.send_file(
+        event.chat_id,
+        "menu.jpg",
+        caption=text,
+        buttons=buttons,
+        parse_mode="HTML"
+    )
+
+print("Бот запущен и готов к работе!")
+bot.run_until_disconnected()

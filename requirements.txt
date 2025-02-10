@@ -1,8 +1,9 @@
 python-dotenv
-aiogram
+telethon
 aiohttp
 pytoniq
 telebot
+pytonconnect
 pytoncenter==0.0.14
 # tonpy
 
