@@ -1,0 +1,9 @@
+python-dotenv
+aiogram
+aiohttp
+pytoniq
+telebot
+pytoncenter==0.0.14
+# tonpy
+
+
