@@ -5,6 +5,4 @@ pytoniq
 telebot
 pytonconnect
 pytoncenter==0.0.14
-# tonpy
-
-
+prisma
