@@ -1,11 +1,5 @@
 #!/bin/bash
 
-echo "Waiting for the database to start..."
-while ! nc -z db 5432; do
-  sleep 0.1
-done
-echo "Database is up!"
-
 if [ "$AUTO_GENERATE_MIGRATIONS" = "true" ]; then
   echo "Generating migrations..."
   prisma migrate deploy

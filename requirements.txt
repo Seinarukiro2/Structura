@@ -1,8 +1,9 @@
+prisma==0.15.0
 python-dotenv
 telethon
 aiohttp
-pytoniq
 telebot
-pytonconnect
 pytoncenter==0.0.14
-prisma
+tonpy
+pytonconnect
+pytoniq
